@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/HomeFragment">
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.example.medireminder.fragments.HomeFragment"
+        android:label="Home" />
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="com.example.medireminder.fragments.AddFragment"
+        android:label="Add" />
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.medireminder.fragments.DetailsFragment"
+        android:label="Details" />
+
+    <fragment
+        android:id="@+id/historialFragment"
+        android:name="com.example.medireminder.fragments.HistorialFragment"
+        android:label="Historial" />
+
+    <fragment
+        android:id="@+id/perfilFragment"
+        android:name="com.example.medireminder.fragments.PerfilFragment"
+        android:label="Perfil" />
+</navigation>
