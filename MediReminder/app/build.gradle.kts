@@ -68,6 +68,15 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.4.3")
     implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
 
+    implementation(platform(libs.firebaseBom))
+    implementation(libs.firebaseAuth)
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+
+    implementation("androidx.compose.material3:material3:1.2.1")
+
+
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
