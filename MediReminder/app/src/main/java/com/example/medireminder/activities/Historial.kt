@@ -7,18 +7,24 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.*
+import androidx.compose.ui.unit.sp
+
 
 data class Medicamento(
     val id: String = "",
     val name: String = "",
     val dose: String = "",
     val time: String = "",
-    val notas: String = ""
+    val notas: String = "",
+    val fechaRegistro: Date = Date()
 )
 
 @Composable
@@ -39,7 +45,8 @@ fun MedicineListScreen() {
                         name = doc.getString("name") ?: "",
                         dose = doc.getString("dose") ?: "",
                         time = doc.getString("time") ?: "",
-                        notas = doc.getString("notes") ?: ""
+                        notas = doc.getString("notes") ?: "",
+                        fechaRegistro = doc.getDate("fechaRegistro") ?: Date ()
                     )
                 }
                 isLoading = false
@@ -56,8 +63,11 @@ fun MedicineListScreen() {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("Historial de Medicamentos", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(16.dp))
+        Text("Actividad", style = MaterialTheme.typography.headlineMedium.copy(
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold
+        ))
+        Spacer(modifier = Modifier.height(32.dp))
 
         when {
             isLoading -> {
@@ -72,6 +82,7 @@ fun MedicineListScreen() {
             else -> {
                 LazyColumn {
                     items(medicamentos) { med ->
+                        val etiquetaDia = med.fechaRegistro?.let { getDiaTexto(it) }
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -79,6 +90,14 @@ fun MedicineListScreen() {
                             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
+                                if (etiquetaDia != null) {
+                                    Text(
+                                        text = etiquetaDia,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                }
                                 Text(text = med.name, style = MaterialTheme.typography.titleMedium)
                                 Text(text = "Dosis: ${med.dose}", style = MaterialTheme.typography.bodyMedium)
                                 Text(text = "Hora: ${med.time}", style = MaterialTheme.typography.bodyMedium)
@@ -92,4 +111,28 @@ fun MedicineListScreen() {
             }
         }
     }
+}
+
+fun getDiaTexto(fecha: Date): String {
+    val hoy = Calendar.getInstance()
+    val fechaCal = Calendar.getInstance().apply { time = fecha }
+
+    return when {
+        esMismoDia(hoy, fechaCal) -> "Hoy"
+        esAyer(hoy, fechaCal) -> "Ayer"
+        else -> {
+            val formato = SimpleDateFormat("d 'de' MMMM 'de' yyyy", Locale("es", "MX"))
+            formato.format(fecha)
+        }
+    }
+}
+
+fun esMismoDia(c1: Calendar, c2: Calendar): Boolean {
+    return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) &&
+            c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)
+}
+
+fun esAyer(hoy: Calendar, fecha: Calendar): Boolean {
+    hoy.add(Calendar.DAY_OF_YEAR, -1)
+    return esMismoDia(hoy, fecha)
 }

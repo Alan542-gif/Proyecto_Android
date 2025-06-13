@@ -18,6 +18,7 @@ import com.example.medireminder.ui.theme.MediReminderTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
+
 sealed class BottomNavScreen(val route: String, val title: String, val icon: ImageVector) {
     object Home : BottomNavScreen("home", "Home", Icons.Filled.Home)
     object Add : BottomNavScreen("add", "Añadir", Icons.Filled.Add)
@@ -69,26 +70,15 @@ fun AppNavigation(modifier: Modifier = Modifier, navController: NavHostControlle
             EditMedicineScreen(id = id, navController = navController)
         }
         composable(BottomNavScreen.Add.route) {
-            AddMedicineScreen(onAddSuccess = {
-                navController.navigate(BottomNavScreen.Historial.route) {
-                    popUpTo(BottomNavScreen.Historial.route) { inclusive = true }
-                }
-            })
+            AddMedicineScreen(navController = navController)
+
         }
         composable(BottomNavScreen.Historial.route) {
             MedicineListScreen()
         }
         composable(BottomNavScreen.Perfil.route) {
-            PerfilScreen(
-                onSignOut = {
-                    Firebase.auth.signOut()
-                    navController.context.startActivity(
-                        Intent(navController.context, SignInActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                    )
-                }
-            )
+            PerfilScreen(navController = navController)
+            
         }
     }
 }

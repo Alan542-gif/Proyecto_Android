@@ -16,24 +16,25 @@ import androidx.navigation.NavController
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import androidx.compose.foundation.ExperimentalFoundationApi
-
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import com.example.medireminder.R
+import androidx.compose.ui.unit.sp
+
 
 data class Medicine(
     val id: String = "",
     val name: String = "",
     val dose: String = "",
     val interval: String = "",
-    val days: String = "",
+    val days: List<String> = emptyList(),
     val time: String = "",
     val status: String = "",
     val active: Boolean = true,
     val notes: String = ""
 )
-
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -59,14 +60,12 @@ fun HomeScreen(navController: NavController) {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Imagen de fondo
         Image(
             painter = painterResource(id = R.drawable.fondo3),
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier.fillMaxSize()
         )
-
 
         Box(
             modifier = Modifier
@@ -84,9 +83,13 @@ fun HomeScreen(navController: NavController) {
                 )
             } else {
                 Column {
-                    Text("Hola", fontSize = 32.sp)
+                    Text("Hola", fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                     Spacer(modifier = Modifier.height(18.dp))
-                    Text("Tus medicamentos", fontSize = 24.sp)
+                    Text("Tus medicamentos", fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     LazyColumn {
@@ -127,7 +130,7 @@ fun MedicineCard(medicine: Medicine, onLongClick: () -> Unit) {
             Spacer(modifier = Modifier.height(4.dp))
             Text("Dosis: ${medicine.dose}")
             if (medicine.interval.isNotEmpty()) Text(medicine.interval)
-            if (medicine.days.isNotEmpty()) Text(medicine.days)
+            if (medicine.days.isNotEmpty()) Text(medicine.days.joinToString(", "))
             if (medicine.time.isNotEmpty()) Text(medicine.time)
             if (medicine.notes.isNotEmpty()) Text("Notas: ${medicine.notes}")
         }

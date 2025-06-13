@@ -75,7 +75,12 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.1")
 
 
-
+    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.runtime:runtime")
+    implementation("androidx.compose.ui:ui-tooling-preview")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
